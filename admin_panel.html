@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="ku-IQ" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پەڕەی بەڕێوەبردن - ئەکادێمیای شەترەنجی هەولێر</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- ناوبار -->
+        <header class="admin-header">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="لۆگۆی ئەکادێمیای شەترەنجی هەولێر" class="admin-logo">
+                <h1>بەڕێوەبردنی ئەکادێمیای شەترەنجی هەولێر</h1>
+            </div>
+            <div class="admin-user-info">
+                <span id="admin-name">بەخێربێیت، <span id="user-fullname">ئەدمین</span></span>
+                <a href="php/logout.php" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> دەرچوون
+                </a>
+            </div>
+        </header>
+        
+        <!-- ناوەڕۆکی سەرەکی -->
+        <div class="admin-content">
+            <!-- مێنیوی لاتەنیشت -->
+            <div class="admin-sidebar">
+                <ul class="admin-menu">
+                    <li class="menu-item active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> داشبۆرد
+                    </li>
+                    <li class="menu-item" data-tab="activities">
+                        <i class="fas fa-chess"></i> کار و چالاکییەکان
+                    </li>
+                    <li class="menu-item">
+                        <a href="index.html" target="_blank">
+                            <i class="fas fa-globe"></i> بینینی پەیجی سەرەکی
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- ناوەڕۆکی تابەکان -->
+            <div class="admin-main-content">
+                <!-- داشبۆرد -->
+                <div class="content-tab active" id="dashboard-tab">
+                    <h2>داشبۆرد</h2>
+                    
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chess-knight"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>کۆی چالاکییەکان</h3>
+                                <p id="total-activities">...</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>دوایین چالاکی</h3>
+                                <p id="latest-activity-date">...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activities">
+                        <h3>دوایین چالاکییەکان</h3>
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="recent-activities-table">
+                                <thead>
+                                    <tr>
+                                        <th>سەردێڕ</th>
+                                        <th>بەروار</th>
+                                        <th>کردارەکان</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activities-list">
+                                    <!-- داتای دوایین چالاکییەکان لێرە دەردەکەون -->
+                                    <tr>
+                                        <td colspan="3" class="loading-data">چاوەڕوان بە...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- بەشی بەڕێوەبردنی چالاکییەکان -->
+                <div class="content-tab" id="activities-tab">
+                    <div class="tab-header">
+                        <h2>بەڕێوەبردنی کار و چالاکییەکان</h2>
+                        <button class="btn btn-primary" id="add-activity-btn">
+                            <i class="fas fa-plus"></i> زیادکردنی چالاکی نوێ
+                        </button>
+                    </div>
+                    
+                    <!-- لیستی چالاکییەکان -->
+                    <div class="admin-table-container">
+                        <table class="admin-table" id="activities-table">
+                            <thead>
+                                <tr>
+                                    <th>وێنە</th>
+                                    <th>سەردێڕ</th>
+                                    <th>بەروار</th>
+                                    <th>ڤیدیۆ</th>
+                                    <th>کردارەکان</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activities-list">
+                                <!-- داتای چالاکییەکان لێرە دەردەکەون -->
+                                <tr>
+                                    <td colspan="5" class="loading-data">چاوەڕوان بە...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدێلی زیادکرد/دەستکاریکردنی چالاکی -->
+    <div id="activity-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">زیادکردنی چالاکی نوێ</h2>
+            
+            <form id="activity-form" enctype="multipart/form-data">
+                <input type="hidden" id="activity-id" name="activity_id" value="0">
+                
+                <div class="form-group">
+                    <label for="title">سەردێڕی چالاکی*</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">وەسفی چالاکی*</label>
+                    <textarea id="description" name="description" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">بەرواری چالاکی</label>
+                    <input type="date" id="date" name="date" value="">
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">وێنەی چالاکی</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <div id="image-preview" class="image-preview-container">
+                        <img id="preview-image" src="" alt="پێشبینینی وێنە" style="display: none;">
+                        <p>وێنەیەک هەڵبژێرە یان ڕاکێشە بۆ ئێرە</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="video_url">لینکی ڤیدیۆ (یوتیوب یان هەر شوێنێکی تر)</label>
+                    <input type="url" id="video_url" name="video_url" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" id="cancel-activity">پاشگەزبوونەوە</button>
+                    <button type="submit" class="btn btn-primary" id="save-activity">خەزنکردن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- مۆدێلی دڵنیابوونەوە لە سڕینەوە -->
+    <div id="confirm-delete-modal" class="modal">
+        <div class="modal-content">
+            <h2>دڵنیابوونەوە لە سڕینەوە</h2>
+            <p>ئایا دڵنیای لە سڕینەوەی ئەم چالاکییە؟</p>
+            <p>ئەم کردارە ناگەڕێتەوە!</p>
+            
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancel-delete">پاشگەزبوونەوە</button>
+                <button class="btn btn-danger" id="confirm-delete">سڕینەوە</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/admin.js"></script>
+</body>
+</html>
